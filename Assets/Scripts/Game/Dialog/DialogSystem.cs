@@ -6,23 +6,50 @@ using TMPro;
 
 using UnityEngine;
 
-public enum DialogActionTypeEnum
+public enum DialogActionType
 {
     Text,
     Buttons,
 }
 
-public struct DialogActionButton
+public class DialogActionButton
 {
-    public string text;
-    public Action callback;
+    public string Text;
+    public Action Callback;
 }
 
-public struct DialogAction
+public class DialogAction
 {
-    public DialogActionTypeEnum type;
-    public string text;
-    public DialogActionButton[] buttons;
+    public DialogActionType Type;
+    public string Text;
+    public DialogActionButton[] Buttons;
+
+    public static DialogAction NewText(string text)
+    {
+        return new DialogAction
+        {
+            Type = DialogActionType.Text,
+            Text = text
+        };
+    }
+
+    public static DialogAction NewButtons(params DialogActionButton[] buttons)
+    {
+        return new DialogAction
+        {
+            Type = DialogActionType.Buttons,
+            Buttons = buttons
+        };
+    }
+
+    public static DialogActionButton NewButton(string text, Action callback)
+    {
+        return new DialogActionButton
+        {
+            Text = text,
+            Callback = callback
+        };
+    }
 }
 
 public class DialogSystem : MonoBehaviour
@@ -55,44 +82,15 @@ public class DialogSystem : MonoBehaviour
             Instance = this;
         }
 
-        ShowDialog(new DialogAction[]
-        {
-            new DialogAction()
-            {
-                type = DialogActionTypeEnum.Text,
-                text = "This is a dialog.\nthis is a new line.",
-            },
-            new DialogAction()
-            {
-                type = DialogActionTypeEnum.Text,
-                text = "Hi this is the second text",
-            },
-            new DialogAction()
-            {
-                type = DialogActionTypeEnum.Buttons,
-                buttons = new DialogActionButton[] {
-                    new DialogActionButton {
-                        text = "OK",
-                        callback = () => print("OK")
-                    },
-                    new DialogActionButton {
-                        text = "Next",
-                        callback = () => AddAction(
-                            new DialogAction()
-                            {
-                                type = DialogActionTypeEnum.Text,
-                                text = "Hi this is an additional text",
-                            }
-                        )
-                    }
-                }
-            },
-            new DialogAction()
-            {
-                type = DialogActionTypeEnum.Text,
-                text = "Hi this is the third text",
-            },
-        });
+        ShowDialog(
+            DialogAction.NewText("This is a dialog.\nthis is a new line."),
+            DialogAction.NewText("Hi this is the second text"),
+            DialogAction.NewButtons(
+                DialogAction.NewButton("OK", () => print("OK")),
+                DialogAction.NewButton("Next", () => AddAction(DialogAction.NewText("Hi this is an additional text")))
+            ),
+            DialogAction.NewText("Hi this is the third text")
+        );
     }
 
     public void AddAction(DialogAction action)
@@ -100,7 +98,7 @@ public class DialogSystem : MonoBehaviour
         actions.Add(action);
     }
 
-    public void ShowDialog(DialogAction[] actionsParam)
+    public void ShowDialog(params DialogAction[] actionsParam)
     {
         actions = new(actionsParam);
 
@@ -118,9 +116,9 @@ public class DialogSystem : MonoBehaviour
         {
             DialogAction action = actions[count];
 
-            if (action.type == DialogActionTypeEnum.Text)
+            if (action.Type == DialogActionType.Text)
             {
-                textUI.text = action.text;
+                textUI.text = action.Text;
 
                 while (!Input.GetKeyDown(KeyCode.Space))
                 {
@@ -134,21 +132,21 @@ public class DialogSystem : MonoBehaviour
 
                 textUI.text = "";
             }
-            else if (action.type == DialogActionTypeEnum.Buttons)
+            else if (action.Type == DialogActionType.Buttons)
             {
                 bool isClicked = false;
 
-                foreach (DialogActionButton buttonData in action.buttons)
+                foreach (DialogActionButton buttonData in action.Buttons)
                 {
                     GameObject button = Instantiate(buttonPrefab, buttonsContainer);
 
                     DialogButton dialogButton = button.GetComponent<DialogButton>();
 
-                    dialogButton.OnClick(buttonData.text, delegate ()
+                    dialogButton.OnClick(buttonData.Text, delegate ()
                     {
                         isClicked = true;
 
-                        buttonData.callback();
+                        buttonData.Callback();
                     });
                 }
 
