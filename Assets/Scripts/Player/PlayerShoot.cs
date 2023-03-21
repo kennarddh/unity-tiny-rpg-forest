@@ -2,49 +2,52 @@ using System;
 
 using UnityEngine;
 
-public class PlayerShoot : MonoBehaviour
+namespace Player
 {
-    float lastX = 0, lastY = 1;
-
-    [SerializeField]
-    GameObject arrowPrefab;
-
-    private long lastShootTime;
-
-    private Animator anim;
-
-    [SerializeField]
-    Transform shootPoint;
-
-    private void Awake()
+    public class PlayerShoot : MonoBehaviour
     {
-        anim = GetComponent<Animator>();
-    }
+        float lastX = 0, lastY = 1;
 
-    private void Update()
-    {
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        [SerializeField]
+        GameObject arrowPrefab;
+
+        private long lastShootTime;
+
+        private Animator anim;
+
+        [SerializeField]
+        Transform shootPoint;
+
+        private void Awake()
         {
-            lastX = Input.GetAxisRaw("Horizontal");
-            lastY = Input.GetAxisRaw("Vertical");
+            anim = GetComponent<Animator>();
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        private void Update()
         {
-            Shoot();
+            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+            {
+                lastX = Input.GetAxisRaw("Horizontal");
+                lastY = Input.GetAxisRaw("Vertical");
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                Shoot();
+            }
         }
-    }
 
-    private void Shoot()
-    {
-        if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < lastShootTime + 500) return;
+        private void Shoot()
+        {
+            if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < lastShootTime + 500) return;
 
-        lastShootTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            lastShootTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-        double angle = Math.Atan2(lastY, lastX) * (180 / Math.PI);
+            double angle = Math.Atan2(lastY, lastX) * (180 / Math.PI);
 
-        anim.SetTrigger("Shoot");
+            anim.SetTrigger("Shoot");
 
-        Instantiate(arrowPrefab, shootPoint.position, Quaternion.Euler(0, 0, (float)angle - 90));
+            Instantiate(arrowPrefab, shootPoint.position, Quaternion.Euler(0, 0, (float)angle - 90));
+        }
     }
 }

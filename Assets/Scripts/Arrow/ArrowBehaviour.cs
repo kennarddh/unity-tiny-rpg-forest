@@ -1,17 +1,20 @@
 using UnityEngine;
 
-public class ArrowBehaviour : MonoBehaviour
+namespace Arrow
 {
-    [SerializeField]
-    float speed, lifeTime = 5;
-
-    private void Start()
+    public class ArrowBehaviour : MonoBehaviour
     {
-        Destroy(gameObject, lifeTime);
-    }
+        [SerializeField]
+        float speed, lifeTime = 5;
 
-    private void Update()
-    {
-        transform.Translate(speed * Time.deltaTime * Vector2.up);
+        private void Start()
+        {
+            Destroy(gameObject, lifeTime);
+        }
+
+        private void Update()
+        {
+            transform.Translate(speed * Time.deltaTime * Vector2.up);
+        }
     }
 }

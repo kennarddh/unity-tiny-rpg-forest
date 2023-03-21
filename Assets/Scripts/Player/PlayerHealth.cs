@@ -3,66 +3,69 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+namespace Player
 {
-    [SerializeField]
-    private Image[] hearts;
-
-    [SerializeField]
-    private Sprite emptyHeartSprite;
-
-    private int health, prevHealth;
-
-    private long lastHitTime;
-
-    public int Health
+    public class PlayerHealth : MonoBehaviour
     {
-        get => health;
+        [SerializeField]
+        private Image[] hearts;
 
-        set
+        [SerializeField]
+        private Sprite emptyHeartSprite;
+
+        private int health, prevHealth;
+
+        private long lastHitTime;
+
+        public int Health
         {
-            prevHealth = health;
+            get => health;
 
-            health = value;
-
-            for (int i = 1; i <= prevHealth - health; i++)
+            set
             {
-                hearts[prevHealth - i].sprite = emptyHeartSprite;
+                prevHealth = health;
+
+                health = value;
+
+                for (int i = 1; i <= prevHealth - health; i++)
+                {
+                    hearts[prevHealth - i].sprite = emptyHeartSprite;
+                }
             }
         }
-    }
 
-    private void Awake()
-    {
-        health = hearts.Length;
-
-        prevHealth = health;
-    }
-
-    private void Dead()
-    {
-        print("Dead");
-    }
-
-    private void Damage(int damage)
-    {
-        Health = Health - damage <= 0 ? 0 : Health - damage;
-
-        if (Health <= 0)
+        private void Awake()
         {
-            Dead();
+            health = hearts.Length;
+
+            prevHealth = health;
         }
-    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < lastHitTime + 500) return;
-
-        lastHitTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-        if (collision.gameObject.CompareTag("Mole"))
+        private void Dead()
         {
-            Damage(1);
+            print("Dead");
+        }
+
+        private void Damage(int damage)
+        {
+            Health = Health - damage <= 0 ? 0 : Health - damage;
+
+            if (Health <= 0)
+            {
+                Dead();
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() < lastHitTime + 500) return;
+
+            lastHitTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            if (collision.gameObject.CompareTag("Mole"))
+            {
+                Damage(1);
+            }
         }
     }
 }
