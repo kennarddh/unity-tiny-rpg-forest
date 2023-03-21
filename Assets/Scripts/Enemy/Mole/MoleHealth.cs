@@ -1,3 +1,5 @@
+using Game.Achivement;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +27,8 @@ namespace Enemy.Mole
 
                 if (health == 0)
                 {
+                    AchivementSystem.Instance.Achivements.Kills[EnemyType.Mole].Set(prev => prev + 1);
+
                     Destroy(gameObject);
                 }
             }

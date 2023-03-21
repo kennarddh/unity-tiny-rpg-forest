@@ -1,3 +1,7 @@
+using Enemy;
+
+using Game.Achivement;
+
 using UnityEngine;
 
 namespace Player
@@ -14,6 +18,11 @@ namespace Player
         {
             rb = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+            AchivementSystem.Instance.Achivements.Kills[EnemyType.Mole].OnChangeEvent += (value) => print(value);
         }
 
         private void FixedUpdate()
