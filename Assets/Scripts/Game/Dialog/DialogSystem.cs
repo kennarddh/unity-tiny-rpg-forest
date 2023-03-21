@@ -36,16 +36,6 @@ namespace Game.Dialog
                 DontDestroyOnLoad(this);
                 Instance = this;
             }
-
-            ShowDialog(
-                DialogAction.NewText("This is a dialog.\nthis is a new line."),
-                DialogAction.NewText("Hi this is the second text"),
-                DialogAction.NewButtons(
-                    DialogAction.NewButton("OK", () => print("OK")),
-                    DialogAction.NewButton("Next", () => AddAction(DialogAction.NewText("Hi this is an additional text")))
-                ),
-                DialogAction.NewText("Hi this is the third text")
-            );
         }
 
         public void AddAction(params DialogAction[] action)
