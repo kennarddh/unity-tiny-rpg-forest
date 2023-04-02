@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f536b39d943c141a162b6d8de1c47e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Achivements: {}
 --- !u!1 &16383245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,10 +1156,6 @@ MonoBehaviour:
   - Type: 0
     Text: Hi this is second
     Buttons: []
-  - Type: 1
-    Text: 
-    Buttons:
-    - Text: Button 1
 --- !u!1 &714586302
 GameObject:
   m_ObjectHideFlags: 0
